@@ -1,12 +1,17 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Welcome from './pages/Welcome/WelcomePage';
+import Login from './pages/Login/Login';
 
 function App() {
   return (
-    // Conteudo aqui
-    <div>
-      <h1 className='text-5xl font-bold underline hover:cursor-pointer'>Bem vindo!</h1>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Tipografia e cores padrão */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f7f3ec;
+  color: #5a4d41;
+  line-height: 1.5;
+}
+
+a, button {
+  font-family: inherit;
+}
+
+/* Utilitários */
+.container {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+h1, h2 {
+  color: #5a4d41;
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+}
