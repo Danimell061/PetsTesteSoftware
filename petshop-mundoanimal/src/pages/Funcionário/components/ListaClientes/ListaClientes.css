@@ -1,4 +1,4 @@
-/* Renomeado de .clientes-container para .view-container para reutilização */
+/* --- Layout Principal da View --- */
 .view-container {
   background-color: #fff;
   padding: 2rem;
@@ -6,16 +6,32 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* NOVO: Estilos para o cabeçalho e a busca */
+.error-message {
+  color: #ef4444;
+  text-align: center;
+}
+
+/* --- Cabeçalho e Controles (Título, Busca, Filtros) --- */
 .view-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start; /* Alinha pelo topo para o caso de múltiplos controles */
   margin-bottom: 2rem;
+  gap: 2rem;
 }
 
 .view-header h1 {
   margin: 0;
+  font-size: 1.8rem;
+  white-space: nowrap;
+}
+
+/* Container para agrupar a busca e os filtros à direita */
+.search-and-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha os controles à direita */
+  gap: 0.75rem; /* Espaço entre a busca e os checkboxes */
 }
 
 .search-input {
@@ -23,7 +39,7 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 2rem;
-  width: 300px;
+  width: 350px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -33,17 +49,101 @@
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
 }
 
-/* O resto do CSS permanece igual */
+/* Grupo de Checkboxes para Filtro */
+.filter-group {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os checkboxes quebrem a linha se não houver espaço */
+  gap: 1.5rem;
+  padding-right: 0.5rem;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.filter-group input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+/* --- Layout da Tabela --- */
 .clientes-table {
   display: flex;
   flex-direction: column;
 }
 
-.clientes-header, .cliente-row {
+/* Regra de Grid para Cabeçalho e Linhas (GARANTE O ALINHAMENTO) */
+.clientes-header, 
+.cliente-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1.5fr 2.5fr 3fr 1.5fr minmax(180px, 1.5fr); 
   align-items: center;
-  padding: 1rem;
+  padding: 0 1rem; /* Padding horizontal para espaçamento das bordas */
   border-bottom: 1px solid #e5e7eb;
+  gap: 1rem;
 }
-/* ... etc ... */
+
+/* Estilo para todas as células (<div>s dentro das linhas/cabeçalho) */
+.clientes-header > div,
+.cliente-row > div {
+  padding: 1rem 0; /* Padding vertical para altura da linha */
+  text-align: left;
+  min-width: 0; /* Ajuda a evitar que conteúdo grande quebre o layout */
+  word-break: break-word; /* Quebra palavras longas como emails e IDs */
+}
+
+/* Estilo específico APENAS para o cabeçalho */
+.clientes-header {
+  font-weight: 600;
+  color: #4b5563;
+  background-color: #f9fafb;
+}
+
+.cliente-row:last-child {
+  border-bottom: none;
+}
+
+/* --- Ações e Botões --- */
+.cliente-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.cliente-actions button {
+  padding: 0.5rem 1rem;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  white-space: nowrap; /* Impede a quebra de texto nos botões */
+}
+
+.btn-alterar {
+  background-color: #60a5fa;
+}
+.btn-alterar:hover {
+  background-color: #3b82f6;
+}
+
+.btn-excluir {
+  background-color: #f87171;
+}
+.btn-excluir:hover {
+  background-color: #ef4444;
+}
+
+/* --- Mensagens --- */
+.no-results-message {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}

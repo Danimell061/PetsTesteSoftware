@@ -28,6 +28,13 @@ const cadastrarPetService = async (formData) => {
     return response;
 }
 
+const deletePetService = async (petId, token) => {
+    const response = await api.delete(`/pet/${petId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response;
+}
 
-
-export { getAllPets, getUserPets, cadastrarPetService }
+export { getAllPets, getUserPets, cadastrarPetService, deletePetService }

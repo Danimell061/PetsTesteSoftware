@@ -33,7 +33,7 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
   // 2. Modifique a função handleSubmit para ser assíncrona e chamar a API
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!name || !age || !photo) {
+    if (!name || !age) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -56,7 +56,8 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
 
     try {
       // 4. Chame o serviço da API
-      const response = await cadastrarPetService(formData);
+      const pet = Object.fromEntries(formData.entries())
+      const response = await cadastrarPetService(pet);
 
       // 5. Se tiver sucesso, adicione o novo pet (retornado pela API) à lista e feche o modal
       onAddPet(response.data);

@@ -19,7 +19,7 @@ export default function Sidebar() {
         </div>
         <nav className="sidebar-nav">
           <NavLink to="/funcionario/clientes" className="sidebar-link">
-            Clientes
+            Usuários
           </NavLink>
           <NavLink to="/funcionario/pets" className="sidebar-link">
             Pets

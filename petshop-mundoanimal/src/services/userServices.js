@@ -29,5 +29,13 @@ const getUserLogged = async () => {
     return response
 }
 
+const deleteUserService = async (userId, token) => {
+    const response = await api.delete(`/user/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response;
+}
 
-export { getAllUsers, loginService, cadastrarService, getUserLogged }
+export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUserService };

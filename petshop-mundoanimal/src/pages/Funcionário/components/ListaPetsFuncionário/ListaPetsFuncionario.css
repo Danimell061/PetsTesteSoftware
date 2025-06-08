@@ -1,0 +1,6 @@
+.pet-list-funcionario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Espaçamento entre os cards de pet */
+  margin-top: 2rem;
+}
