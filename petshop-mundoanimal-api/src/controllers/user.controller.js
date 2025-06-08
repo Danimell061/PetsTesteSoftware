@@ -12,13 +12,13 @@ const registerUser = async (req, res)=>{
         // Se tiver cargo da console log no cargo
         console.log(`Cargo: ${role ?? 'cliente'}`)
 
-        const user = await userService.create(req.body) // Chama o userService para se comunicar com o database
+        const token = await userService.create(req.body) // Chama o userService para se comunicar com o database
 
-        if(!user){
-            return res.status(400).send({ message: "Erro criando o usuario" })
+        if(!token){
+            return res.status(400).send({ message: "Erro criando o usuario (provavelmente ja existe esse email)" })
         }
 
-        res.status(201).send(user)
+        res.status(201).send(token)
     }catch(err){
         res.status(500).send({ message: err.message })
     }
@@ -79,4 +79,11 @@ const updateUser = async (req, res) => {
     }
 }
 
-export { registerUser, findAllUsers, findUser, updateUser }
+const findUserByToken = async (req, res) => {
+    const { decodedId } = req
+    const user = await userService.findById(decodedId)
+
+    res.status(200).send(user)
+}
+
+export { registerUser, findAllUsers, findUser, updateUser, findUserByToken }
