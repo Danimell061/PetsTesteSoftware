@@ -21,7 +21,7 @@ const cadastrarService = async (data) => {
 }
 
 const getUserLogged = async () => {
-    const response = await api.get('/user/findByTkn', {
+    const response = await api.get('/user/findUserByTkn', {
         headers: {
             Authorization: `Bearer ${Cookies.get("token")}`
         }

@@ -1,33 +1,32 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import '../../../styles/Global.css';
 import { useState, useRef, useEffect } from 'react';
-import { loginService } from '../../services/userServices';
+import { getUserLogged, loginService } from '../../services/userServices';
 import Cookies from 'js-cookie';
 
 export default function Login() {
-    const location = useLocation();
     const [data, setData] = useState({})
     const emailRef = useRef()
     const senhaRef = useRef()
-    const tipoUsuario = (location.state?.tipoUsuario || 'cliente') === 'cliente'
-        ? 'Cliente'
-        : 'Funcionario';
 
     const navigate = useNavigate();
 
     useEffect(()=>{
         if (Object.keys(data).length > 0) {
-            loginService(data).then((response) => {
+            loginService(data).then(async (response) => {
                 if (response.status === 200) {
                     Cookies.set('token', response.data.token)
-                    navigate(`/${tipoUsuario.toLowerCase()}`)
+                    const user = await getUserLogged()
+                    const tela = user.data.role == 'cliente' ? 'cliente' : 'funcionario'
+                    
+                    navigate(`/${tela.toLowerCase()}`)
                 }
             }).catch((err) => {
                 console.log(err.response)
             })
         }
-    }, [ data ])
+    }, [ data, navigate ])
 
     const handleSubmit = (event) => {
         event.preventDefault();
