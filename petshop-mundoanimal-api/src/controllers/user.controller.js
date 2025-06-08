@@ -50,7 +50,16 @@ const findUser = async (req, res)=>{
 // Atualiza um usuario pelo id
 const updateUser = async (req, res) => {
     try{
-        const { userId: id } = req
+        
+        const { userId: id, decodedId } = req
+
+        if(id != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin' && user.role !== 'funcionario'){
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
         const { name, email, password, role } = req.body
 
         if(!name && !email && !password && !role){

@@ -26,14 +26,7 @@ const authMiddleware = (req, res, next) => {
         if(error){
             return res.status(401).send({ message: "Token invalido!" })
         }
-        console.log(req.userId)
-        console.log(decoded.id)
-        if(req.userId != decoded.id){
-            const user = await userService.findById(decoded.id)
-            if(user.role !== 'admin' && user.role !== 'funcionario'){
-                return res.status(401).send("Unauthorized")
-            }
-        }
+        req.decodedId = decoded.id
 
         return next()
     })
