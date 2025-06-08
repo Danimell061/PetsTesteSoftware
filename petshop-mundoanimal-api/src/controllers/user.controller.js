@@ -79,4 +79,11 @@ const updateUser = async (req, res) => {
     }
 }
 
-export { registerUser, findAllUsers, findUser, updateUser }
+const findUserByToken = async (req, res) => {
+    const { decodedId } = req
+    const user = await userService.findById(decodedId)
+
+    res.status(200).send(user)
+}
+
+export { registerUser, findAllUsers, findUser, updateUser, findUserByToken }

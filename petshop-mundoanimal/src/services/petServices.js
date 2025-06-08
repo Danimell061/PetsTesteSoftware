@@ -1,8 +1,8 @@
 import api from "./api.js";
 import Cookies from 'js-cookie'
 
-function getAllPets(){
-    const response = api.get('/pet', {
+const getAllPets = async () => {
+    const response = await api.get('/pet', {
         headers: {
             Authorization: `Bearer ${Cookies.get("token")}`
         }
@@ -10,8 +10,8 @@ function getAllPets(){
     return response
 }
 
-function getUserPets(){
-    const response = api.post('/pet/byUser', {
+const getUserPets = async () => {
+    const response = await api.post('/pet/byUser', {
         headers: {
             Authorization: `Bearer ${Cookies.get("token")}`
         }
@@ -19,21 +19,15 @@ function getUserPets(){
     return response
 }
 
-function getPet(id){
-    const response = api.get('/get/', {
-        params: {
-            id: id
-        }
+const cadastrarPetService = async (data) => {
+    const response = await api.post('/pet/', {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }, data
     })
-}
-
-function cadastrarService(data){
-    const response = api.post('/user/', data)
     return response
 }
 
-function atualizarUsuario(data, token){
-    
-}
 
-export { getAllUsers, loginService, cadastrarService }
+
+export { getAllPets, getUserPets, cadastrarPetService }
