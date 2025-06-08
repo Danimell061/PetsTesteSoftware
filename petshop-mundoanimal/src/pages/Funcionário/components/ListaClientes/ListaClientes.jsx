@@ -2,10 +2,6 @@ import React, { useState } from 'react'; // Importe useState
 import './ListaClientes.css';
 
 const mockClientes = [
-  { id: 'CLI001', nome: 'João da Silva' },
-  { id: 'CLI002', nome: 'Maria Oliveira' },
-  { id: 'CLI003', nome: 'Carlos Pereira' },
-  { id: 'CLI004', nome: 'Ana Souza' },
 ];
 
 export default function ListaClientes() {

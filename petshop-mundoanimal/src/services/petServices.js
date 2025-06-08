@@ -11,7 +11,7 @@ const getAllPets = async () => {
 }
 
 const getUserPets = async () => {
-    const response = await api.post('/pet/byUser', {
+    const response = await api.get('/pet/byUser', {
         headers: {
             Authorization: `Bearer ${Cookies.get("token")}`
         }

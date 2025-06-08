@@ -24,7 +24,7 @@ export default function Login() {
                     navigate(`/${tipoUsuario.toLowerCase()}`)
                 }
             }).catch((err) => {
-                console.log(err.response.data)
+                console.log(err.response)
             })
         }
     }, [ data ])

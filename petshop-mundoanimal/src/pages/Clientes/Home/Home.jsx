@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getUserPets } from '../../../services/petServices.js'; // Ajuste o caminho se necessário
 
-// Bloco de imports corrigido com base na sua estrutura
+// Imports dos componentes...
 import Navbar from '../../../components/Navbar/Navbar';
 import PetCard from '../../../components/Petcard/Petcard';
 import Modal from '../../../components/Modal/Modal';
@@ -9,21 +10,48 @@ import './HomePage.css';
 import '../../../../styles/Global.css';
 
 export default function PetsPage() {
-  const [pets, setPets] = useState([
-    { id: 1, nome: 'Rex', especie: 'Cachorro', raca: 'Labrador', idade: '3 anos', foto: 'https://placehold.co/80x80/FCD34D/4A2E0A?text=R' },
-    { id: 2, nome: 'Mimi', especie: 'Gato', raca: 'Persa', idade: '2 anos', foto: 'https://placehold.co/80x80/34D399/FFFFFF?text=M' }
-  ]);
+  const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  useEffect(() => {
+    const fetchUserPets = async () => {
+      try {
+        setLoading(true);
+        const response = await getUserPets();
+        setPets(response.data); 
+        setError(null);
+      } catch (err) {
+        console.error("Erro ao buscar os pets:", err);
+        setError("Não foi possível carregar os pets. Tente novamente mais tarde.");
+        setPets([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchUserPets();
+  }, []);
+
+  // CORREÇÃO 1: Usar 'pet.name' em vez de 'pet.nome'
   const filteredPets = pets.filter(pet =>
-    pet.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    pet?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const addPet = (novoPet) => {
     setPets(prevPets => [novoPet, ...prevPets]);
   };
 
+  if (loading) {
+    return <div>Carregando seus pets...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+  
   return (
     <div className="page-container">
       <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -48,7 +76,8 @@ export default function PetsPage() {
             </div>
           ) : (
             filteredPets.map(pet => (
-              <PetCard key={pet.id} pet={pet} />
+              // CORREÇÃO 2: Usar 'pet._id' como key, que é o id do MongoDB
+              <PetCard key={pet._id} pet={pet} />
             ))
           )}
         </div>
