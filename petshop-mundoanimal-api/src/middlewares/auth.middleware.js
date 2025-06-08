@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
+import userService from '../services/user.service.js'
 
 dotenv.config()
 
@@ -31,4 +32,20 @@ const authMiddleware = (req, res, next) => {
         return next()
     })
 }
-export { authMiddleware }
+
+const roleMiddleware = async (req, res, next) => {
+    try{
+        const { decodedId } = req
+        const user = await userService.findById(decodedId)
+
+        if(user.role === 'cliente'){
+            return res.status(401).send({ message: "Acesso negado!" })
+        }
+        
+        return next()
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { authMiddleware, roleMiddleware }

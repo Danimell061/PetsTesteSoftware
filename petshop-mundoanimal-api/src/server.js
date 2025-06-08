@@ -1,11 +1,12 @@
 import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
-import dbConnect from './src/database/dbConnect.js'
+import dbConnect from './database/dbConnect.js'
 
-import userRoutes from './src/routes/user.routes.js'
-import authRoute from './src/routes/auth.route.js'
-import petRoute from './src/routes/pet.route.js'
+import userRoutes from './routes/user.routes.js'
+import authRoute from './routes/auth.route.js'
+import petRoute from './routes/pet.route.js'
+import swaggerRoute from './routes/swagger.route.js'
 
 
 
@@ -17,6 +18,8 @@ app.use(express.json())
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoute)
 app.use('/api/pet', petRoute)
+app.use('/api/doc', swaggerRoute)
+
 
 
 app.listen(port, ()=>{
