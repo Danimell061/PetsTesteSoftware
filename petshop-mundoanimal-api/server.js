@@ -5,6 +5,7 @@ import dbConnect from './src/database/dbConnect.js'
 
 import userRoutes from './src/routes/user.routes.js'
 import authRoute from './src/routes/auth.route.js'
+import petRoute from './src/routes/pet.route.js'
 
 
 
@@ -15,6 +16,7 @@ app.use(express.json())
 
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoute)
+app.use('/api/pet', petRoute)
 
 
 app.listen(port, ()=>{
