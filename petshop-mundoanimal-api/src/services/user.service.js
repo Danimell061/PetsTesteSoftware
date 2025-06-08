@@ -1,3 +1,4 @@
+import Pet from "../models/Pet.js";
 import User from "../models/User.js";
 import authService from "./auth.service.js";
 
@@ -26,6 +27,10 @@ const userService = {
     },
     update: (id, name, email, password) => {
         return User.findByIdAndUpdate(id, { name, email, password })
+    },
+    delete: async (id) => {
+        await Pet.deleteMany({ user: id })
+        return User.findByIdAndDelete(id)
     }
 }
 

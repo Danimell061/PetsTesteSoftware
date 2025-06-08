@@ -1,4 +1,5 @@
 import petService from "../services/pet.service.js"
+import userService from "../services/user.service.js"
 
 const registerPet = async (req, res) => {
     try{
@@ -94,4 +95,25 @@ const updatePet = async (req, res) => {
     }
 }
 
-export { registerPet, findAllPets, findPet, findUserPets, updatePet }
+const deletePet = async (req,res) => {
+    try{
+        const { pet, decodedId } = req
+        const { _id: userId } = pet.user
+        const { id } = req.params
+
+        if(userId != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin' && user.role !== 'funcionario'){
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
+        const result = await petService.delete(id)
+
+        return res.status(200).send({ message: "Pet deletado!" })
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { registerPet, findAllPets, findPet, findUserPets, updatePet, deletePet }
