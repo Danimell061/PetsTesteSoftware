@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
 import '../../../styles/Global.css';
+import { cadastrarService } from '../../services/userServices';
+import Cookies from 'js-cookie';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   
   // Estado para guardar os dados do formulário
   const [formData, setFormData] = useState({
-    nome: '',
+    name: '',
     email: '',
-    senha: '',
+    password: '',
     confirmarSenha: ''
   });
 
@@ -24,17 +26,21 @@ export default function RegisterPage() {
   };
 
   // Função para lidar com o envio do formulário
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Validação: verificar se as senhas coincidem
-    if (formData.senha !== formData.confirmarSenha) {
+    if (formData.password !== formData.confirmarSenha) {
       alert("As senhas não coincidem!");
       return;
     }
     // Lógica de cadastro (ex: chamada de API)
     console.log("Dados do formulário:", formData);
+    const response = await cadastrarService(formData)
+    const token = response.data
+    Cookies.set('token', token)
+
     // Redireciona para a home após o "cadastro"
-    navigate('/home'); 
+    navigate('/cliente'); 
   };
 
   return (
@@ -50,9 +56,9 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            name="nome"
+            name="name"
             placeholder="Nome Completo"
-            value={formData.nome}
+            value={formData.name}
             onChange={handleChange}
             required
           />
@@ -66,9 +72,9 @@ export default function RegisterPage() {
           />
           <input
             type="password"
-            name="senha"
+            name="password"
             placeholder="Senha"
-            value={formData.senha}
+            value={formData.password}
             onChange={handleChange}
             required
           />

@@ -16,6 +16,7 @@ const loginService = async (data) => {
 }
 
 const cadastrarService = async (data) => {
+    delete data.confirmarSenha
     const response = await api.post('/user/', data)
     return response
 }
