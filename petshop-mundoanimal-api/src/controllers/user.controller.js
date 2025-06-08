@@ -86,4 +86,24 @@ const findUserByToken = async (req, res) => {
     res.status(200).send(user)
 }
 
-export { registerUser, findAllUsers, findUser, updateUser, findUserByToken }
+const deleteUser = async (req, res) => {
+    try{
+        const { userId, decodedId } = req
+        const { id } = req.params
+
+        if(userId != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin' && user.role !== 'funcionario'){
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
+        const result = await userService.delete(id)
+
+        return res.status(200).send({ message: "Usuario e seus pets deletados!" })
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { registerUser, findAllUsers, findUser, updateUser, findUserByToken, deleteUser }

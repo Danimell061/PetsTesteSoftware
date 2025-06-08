@@ -22,6 +22,9 @@ const petService = {
     },
     update: (id, name, type, age, breed, photo) => {
         return Pet.findByIdAndUpdate(id, { name, type, age, breed, photo })
+    },
+    delete: (id) => {
+        return Pet.findByIdAndDelete(id)
     }
 }
 
