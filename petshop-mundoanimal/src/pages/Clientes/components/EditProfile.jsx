@@ -58,7 +58,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
       text: "Sua conta será excluída permanentemente. Esta ação não pode ser revertida.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: "#f87171",
       cancelButtonColor: "#60a5fa",
       confirmButtonText: "Sim, excluir minha conta!",
       cancelButtonText: "Cancelar"
