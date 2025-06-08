@@ -19,6 +19,9 @@ const validUser = async (req, res, next) => {
         return res.status(404).send({ message: "Usuario não encontrado!" })
     }
 
+    req.userId = id
+    req.user = user
+
     next()
 }
 

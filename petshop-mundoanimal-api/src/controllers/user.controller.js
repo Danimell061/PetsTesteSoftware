@@ -40,8 +40,7 @@ const findAllUsers = async (req, res)=>{
 // Encontra usuario pelo id
 const findUser = async (req, res)=>{
     try{
-        const id = req.params.id
-        const user = await userService.findById(id)
+        const { user } = req
         res.status(200).send(user)
     }catch(err){
         res.status(500).send({ message: err.message })
@@ -51,7 +50,7 @@ const findUser = async (req, res)=>{
 // Atualiza um usuario pelo id
 const updateUser = async (req, res) => {
     try{
-        const id = req.params.id
+        const { userId: id } = req
         const { name, email, password, role } = req.body
 
         if(!name && !email && !password && !role){

@@ -1,11 +1,12 @@
 import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
 import dbConnect from './src/database/dbConnect.js'
 
 import userRoutes from './src/routes/user.routes.js'
 import authRoute from './src/routes/auth.route.js'
 
-dotenv.config()
+
 
 const app = express()
 const port = process.env.PORT || 3000
