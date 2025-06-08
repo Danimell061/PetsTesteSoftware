@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Welcome.css';
 import '../../../styles/Global.css';
 import logo from '../../assets/logo.png';
+import Cookies from 'js-cookie';
 
 export default function WelcomePage() {
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(Cookies.get('token')){
+      navigate('/cliente')
+    }
+  }, [navigate])
 
   return (
     <div className="welcome-container">

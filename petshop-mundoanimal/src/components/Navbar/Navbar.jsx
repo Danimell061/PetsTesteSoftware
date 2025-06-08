@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../assets/logo.png';
+import Cookies from 'js-cookie';
 
 export default function Navbar({ searchTerm, setSearchTerm }) {
   // Hook para controlar a visibilidade do dropdown
@@ -10,6 +11,7 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
 
   const handleLogout = () => {
     // Lógica de logout (limpar tokens, etc.) pode ser adicionada aqui
+    Cookies.remove('token')
     navigate('/'); // Redireciona para a página inicial/welcome
   };
 
