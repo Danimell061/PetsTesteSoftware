@@ -33,7 +33,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
         title: "Sucesso!",
         text: "Seu perfil foi atualizado.",
         icon: "success",
-        confirmButtonColor: "#3b82f6"
+        confirmButtonColor: "#60a5fa"
       });
       
       onClose();
@@ -44,7 +44,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
         title: "Erro!",
         text: "Não foi possível atualizar o perfil.",
         icon: "error",
-        confirmButtonColor: "#3b82f6"
+        confirmButtonColor: "#60a5fa"
       });
     } finally {
       setIsSubmitting(false);
@@ -59,7 +59,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#3b82f6",
+      cancelButtonColor: "#60a5fa",
       confirmButtonText: "Sim, excluir minha conta!",
       cancelButtonText: "Cancelar"
     });
