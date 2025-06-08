@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'; // Importe useNavigate
 import './Sidebar.css';
+import Cookies from 'js-cookie';
 
 export default function Sidebar() {
   const navigate = useNavigate(); // Inicialize o hook
 
   const handleLogout = () => {
+    Cookies.remove('token')
     // Aqui você poderia adicionar lógicas de limpeza de sessão, etc.
     navigate('/'); // Redireciona para a página de boas-vindas
   };
