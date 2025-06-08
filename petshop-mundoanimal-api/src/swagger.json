@@ -83,7 +83,7 @@
         }
       }
     },
-    "/api/{id}/": {
+    "/api/user/{id}/": {
       "get": {
         "summary": "Busca usuario pelo id",
         "description": "Rota responsavel por buscar um usuario pelo id",
@@ -119,7 +119,7 @@
         }
       }
     },
-    "/api/{id}": {
+    "/api/user/{id}": {
       "put": {
         "summary": "Atualiza usuario pelo id",
         "description": "Rota responsavel por editar o usuario pelo id",
