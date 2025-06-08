@@ -14,7 +14,7 @@ const registerPet = async (req, res) => {
             age,
             breed,
             photo,
-            userId: req.decodedId
+            user: req.decodedId
         })
 
         res.status(201).send(pet)
@@ -29,8 +29,39 @@ const findAllPets = async (req, res) => {
     if(pets.length === 0){
         return res.status(400).send({ message: "Não há pets registrados" })
     }
-    
+
     res.send(pets)
 }
 
-export { registerPet, findAllPets }
+const findPet = async (req, res) => {
+    try{
+        const { pet, decodedId } = req
+        const { _id: id } = pet.user
+
+        if(id != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin' && user.role !== 'funcionario'){
+                console.log(id)
+                console.log(decodedId)
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
+        res.status(200).send(pet)
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+const findUserPets = async (req, res) => {
+    try{
+        const { decodedId: id } = req
+        const pets = await petService.findByUser(id)
+
+        res.status(200).send(pets)
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { registerPet, findAllPets, findPet, findUserPets }

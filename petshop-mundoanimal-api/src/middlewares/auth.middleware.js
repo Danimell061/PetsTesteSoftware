@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import userService from '../services/user.service.js'
+
 dotenv.config()
 
 const authMiddleware = (req, res, next) => {

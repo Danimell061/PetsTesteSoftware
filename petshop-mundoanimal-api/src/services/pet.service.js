@@ -8,12 +8,18 @@ const petService = {
             age: body.age,
             breed: body.breed ?? undefined,
             photo: body.photo,
-            userId: body.userId,
+            user: body.user,
         })
     },
     findAll: () => {
-        return Pet.find()
-    }
+        return Pet.find().populate('user', 'name email')
+    },
+    findById: (id) => {
+        return Pet.findById(id).sort({ _id: -1 }).populate('user', 'name email')
+    },
+    findByUser: (userId) => {
+        return Pet.find({ user: userId }).sort({ _id: -1 }).populate('user', 'name email')
+    } 
 }
 
 export default petService

@@ -20,7 +20,7 @@ const PetSchema = new mongoose.Schema({
         type: String,
         default: 'https://placehold.co/600x400'
     },
-    userId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
