@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 import { getUserLogged } from '../../services/userServices.js'; // Importe a nova função
 import './Navbar.css';
 import logo from '../../assets/logo.png';
-import Cookies from 'js-cookie';
 
 export default function Navbar({ searchTerm, setSearchTerm }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,18 +30,9 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
   }, []); // O array vazio [] garante que rode só uma vez
 
   const handleLogout = () => {
-<<<<<<< HEAD
-    // Agora só precisamos remover o cookie
-    Cookies.remove('token');
-    // Removemos também o user do localStorage por garantia (limpeza)
-    localStorage.removeItem('user');
-    
-    navigate('/'); 
-=======
     // Lógica de logout (limpar tokens, etc.) pode ser adicionada aqui
     Cookies.remove('token')
     navigate('/'); // Redireciona para a página inicial/welcome
->>>>>>> integracao
   };
 
   return (
