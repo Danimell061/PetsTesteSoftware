@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { updateUserService } from '../../../services/userServices'; // Ajuste o caminho para seus serviços
+import { updateUser } from '../../../services/userServices'; // Ajuste o caminho para seus serviços
 import Swal from 'sweetalert2';
 import './EditProfile.css';
 
@@ -26,7 +26,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
     setIsSubmitting(true);
 
     try {
-      const response = await updateUserService(formData);
+      const response = await updateUser(formData);
       onUpdate(response.data);
       
       Swal.fire({

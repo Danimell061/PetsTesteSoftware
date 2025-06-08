@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
-import { getAllUsers, deleteUserService } from '../../../../services/userServices.js';
+import { getAllUsers, deleteUser } from '../../../../services/userServices.js';
 import './ListaClientes.css';
 
 export default function ListaClientes() {
@@ -52,8 +52,7 @@ export default function ListaClientes() {
 
     if (result.isConfirmed) {
       try {
-        const token = Cookies.get("token");
-        await deleteUserService(clienteId, token);
+        await deleteUser(clienteId);
         setClientes(prevClientes => prevClientes.filter(c => c._id !== clienteId));
         Swal.fire({
           title: "Excluído!",
