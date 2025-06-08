@@ -30,5 +30,22 @@ const getUserLogged = async () => {
     return response
 }
 
+const updateUser = async (id, data)=>{
+    const response = await api.put(`/user/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }
+    })
+    return response
+}
+const deleteUser = async (id) => {
+    const response = await api.delete(`/user/${id}`, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }
+    })
+    return response
+}
 
-export { getAllUsers, loginService, cadastrarService, getUserLogged }
+
+export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUser, updateUser }
