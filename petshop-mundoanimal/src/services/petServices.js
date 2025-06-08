@@ -28,18 +28,6 @@ const cadastrarPetService = async (formData) => {
     return response;
 }
 
-<<<<<<< HEAD
-const deletePetService = async (petId, token) => {
-    const response = await api.delete(`/pet/${petId}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-    return response;
-}
-
-export { getAllPets, getUserPets, cadastrarPetService, deletePetService }
-=======
 const deletePet = async (id) => {
     const response = await api.delete(`/pet/${id}`, {
         headers: {
@@ -60,4 +48,3 @@ const updatePet = async (id, data) => {
 
 
 export { getAllPets, getUserPets, cadastrarPetService, deletePet, updatePet }
->>>>>>> integracao
