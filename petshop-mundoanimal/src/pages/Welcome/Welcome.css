@@ -4,21 +4,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-family: Arial, sans-serif;
+  /* justify-content: center; foi removido para permitir que o header fique no topo */
+  padding-top: 5vh; /* Adiciona um espaço no topo */
+  box-sizing: border-box;
 }
 
 .welcome-header {
+  width: 100%;
   display: flex;
-  align-items: center;
+  justify-content: center; /* Centraliza a logo horizontalmente */
   margin-bottom: 1rem;
-  gap: 0.5rem;
-  color: #fff;
 }
 
-.paw-icon {
-  width: 32px;
-  height: 32px;
+.welcome-logo {
+  height: 100px;
+  width: auto;
 }
 
 .welcome-card {
@@ -75,4 +75,25 @@
 
 .btn-funcionario:hover {
   background-color: #3b82f6;
+}
+
+.signup-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #555;
+}
+
+.signup-link p {
+  margin: 0;
+}
+
+.signup-link span {
+  color: #3b82f6;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.signup-link span:hover {
+  color: #2563eb;
 }

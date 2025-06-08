@@ -39,3 +39,57 @@
   font-weight: 500;
   color: #333;
 }
+
+/* Ajustes no container do usuário */
+.navbar-user {
+  position: relative; /* Essencial para o posicionamento do dropdown */
+}
+
+/* Estilo para o botão que abre o menu */
+.user-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem; /* Garante o mesmo tamanho de fonte */
+  font-weight: 500;
+  color: #333;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.user-button:hover {
+  background-color: #f3f4f6; /* Fundo sutil ao passar o mouse */
+}
+
+/* Estilos do menu dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: 120%; /* Posição logo abaixo do botão */
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 150px;
+  z-index: 1000;
+  overflow: hidden; /* Garante que os itens internos respeitem o border-radius */
+  padding: 0.5rem 0;
+}
+
+/* Estilo para os itens dentro do dropdown */
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}

@@ -6,13 +6,13 @@ export default function Login() {
     const location = useLocation();
     const tipoUsuario = (location.state?.tipoUsuario || 'cliente') === 'cliente'
         ? 'Cliente'
-        : 'Funcionário';
+        : 'Funcionario';
 
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        navigate('/Home');
+        navigate(`/${tipoUsuario.toLowerCase()}`)
     };
 
     return (

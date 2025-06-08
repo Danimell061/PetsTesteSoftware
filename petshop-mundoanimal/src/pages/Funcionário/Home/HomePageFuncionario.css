@@ -1,0 +1,11 @@
+.funcionario-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f3f4f6; /* Fundo cinza claro para a área de conteúdo */
+}
+
+.content-area {
+  flex-grow: 1; /* Ocupa todo o espaço restante */
+  overflow-y: auto; /* Adiciona scroll se o conteúdo for grande */
+  padding: 2rem;
+}
