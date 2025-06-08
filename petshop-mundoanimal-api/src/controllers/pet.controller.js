@@ -41,8 +41,6 @@ const findPet = async (req, res) => {
         if(id != decodedId){
             const user = await userService.findById(decodedId)
             if(user.role !== 'admin' && user.role !== 'funcionario'){
-                console.log(id)
-                console.log(decodedId)
                 return res.status(401).send("Unauthorized")
             }
         }
@@ -64,4 +62,36 @@ const findUserPets = async (req, res) => {
     }
 }
 
-export { registerPet, findAllPets, findPet, findUserPets }
+const updatePet = async (req, res) => {
+    try{
+        const { name, type, age, breed, photo } = req.body
+        const { pet, decodedId, petId } = req
+        const { _id: id } = pet.user
+
+        if(id != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin' && user.role !== 'funcionario'){
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
+        if(!name && !type && !age && !breed && !photo){
+            return res.status(400).send({ message: "Preencha pelo menos um campo!" })
+        }
+
+        const petUpdated = await petService.update(
+            petId,
+            name,
+            type,
+            age,
+            breed,
+            photo
+        )
+        
+        res.send({ message: "Pet atualizado com sucesso!" })
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { registerPet, findAllPets, findPet, findUserPets, updatePet }

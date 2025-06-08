@@ -19,7 +19,10 @@ const petService = {
     },
     findByUser: (userId) => {
         return Pet.find({ user: userId }).sort({ _id: -1 }).populate('user', 'name email')
-    } 
+    },
+    update: (id, name, type, age, breed, photo) => {
+        return Pet.findByIdAndUpdate(id, { name, type, age, breed, photo })
+    }
 }
 
 export default petService
