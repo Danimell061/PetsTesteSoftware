@@ -1,0 +1,63 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  /* Gradiente suave e consistente com a tela de login */
+  background: linear-gradient(to bottom right, #fefce8, #fef3c7);
+}
+
+.content-container {
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-section h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #333;
+}
+
+.register-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #34d399; /* Verde do botão da outra tela */
+  color: #fff;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.register-btn:hover {
+  background-color: #10b981;
+}
+
+.pet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Espaçamento entre os cards */
+}
+
+.no-pets-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  color: #666;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.no-pets-message h2{
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}

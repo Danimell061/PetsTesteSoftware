@@ -10,7 +10,7 @@
   background-color: #fff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 400px;
   text-align: center;
@@ -32,6 +32,21 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Agora centralizamos o conteúdo principal (o título) */
+  margin-bottom: 1rem;
+  position: relative; /* Essencial para o posicionamento do botão voltar */
+}
+
+.login-header h2 {
+  margin: 0; /* Removemos as margens padrão do h2 */
+  font-size: 1.5rem;
+  font-weight: 600; /* Dando um pouco mais de peso à fonte */
+  color: #333; /* Um pouco mais suave que preto puro */
 }
 
 .login-card button {
@@ -56,4 +71,37 @@
 
 .login-card .btn-funcionario:hover {
   background-color: #3b82f6;
+}
+
+.voltar-btn {
+  background: transparent;
+  color: #5a4d41;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.voltar-btn:hover {
+  text-decoration: underline;
+}
+
+.voltar-btn {
+  position: absolute; /* Posição absoluta em relação ao .login-header */
+  left: 0; /* Alinha à esquerda do header */
+  top: 50%;
+  transform: translateY(-50%); /* Centraliza verticalmente com perfeição */
+  
+  background: transparent;
+  color: #8c7b6d;
+  border: none;
+  font-size: 1.5rem; /* Aumenta o tamanho para um ícone de seta */
+  cursor: pointer;
+  padding: 0.5rem; /* Adiciona área de clique */
+  line-height: 1; /* Garante que o ícone fique bem alinhado */
+  font-weight: bold;
+}
+
+.voltar-btn:hover {
+  color: #5a4d41;
+  background-color: #f3f4f6; /* Um leve fundo no hover */
 }
