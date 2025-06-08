@@ -1,20 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import './Welcome.css';
 import '../../../styles/Global.css';
+import logo from '../../assets/logo.png';
 
 export default function WelcomePage() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   return (
     <div className="welcome-container">
       <header className="welcome-header">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-          alt="Pata de animal"
-          className="paw-icon"
-        />
-        <h1 className="welcome-title">Mundo Animal</h1>
+        <img src={logo} alt="Logo Mundo Animal" className="welcome-logo" />
       </header>
 
       <div className="welcome-card">
@@ -22,16 +18,31 @@ export default function WelcomePage() {
         <p className="welcome-text">Escolha como deseja acessar:</p>
 
         <div className="welcome-buttons">
-          <button className="btn-cliente" onClick={() => {
-              navigate('/login', { state: { tipoUsuario: 'cliente'}})
-            }}>
+          <button
+            className="btn-cliente"
+            onClick={() => {
+              navigate('/login', { state: { tipoUsuario: 'cliente' } });
+            }}
+          >
             Login Cliente
           </button>
-          <button className="btn-funcionario" onClick={() => {
-              navigate('/login', { state: { tipoUsuario: 'funcionario'}})
-            }}>
+          <button
+            className="btn-funcionario"
+            onClick={() => {
+              navigate('/login', { state: { tipoUsuario: 'funcionario' } });
+            }}
+          >
             Login Funcionário
           </button>
+        </div>
+
+        <div className="signup-link">
+          <p>
+            Não tem uma conta?{' '}
+            <span onClick={() => navigate('/register')}>
+              Crie uma aqui
+            </span>
+          </p>
         </div>
       </div>
     </div>

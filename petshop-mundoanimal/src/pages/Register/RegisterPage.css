@@ -1,0 +1,84 @@
+.register-container {
+  background: linear-gradient(to bottom right, #a7f3d0, #34d399); /* Gradiente verde para diferenciar */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.register-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.register-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.register-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.register-card input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.register-card button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #34d399;
+  color: #fff;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.register-card button:hover {
+  background-color: #10b981;
+}
+
+/* Estilo do botão "Voltar" (reaproveitado do Login) */
+.voltar-btn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: #8c7b6d;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.voltar-btn:hover {
+  color: #5a4d41;
+  background-color: #f3f4f6;
+}

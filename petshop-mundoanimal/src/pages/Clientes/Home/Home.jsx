@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Navbar from '../../components/Navbar/Navbar';
-import PetCard from '../../components/Petcard/Petcard';
+import Navbar from '../../../components/Navbar/Navbar';
+import PetCard from '../../../components/Petcard/Petcard';
 import './Homepage.css';
-import '../../../styles/Global.css';
+import '../../../../styles/Global.css';
 
 export default function PetsPage() {
   // Estado para armazenar os pets e o termo de busca
