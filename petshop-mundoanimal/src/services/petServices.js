@@ -19,13 +19,13 @@ const getUserPets = async () => {
     return response
 }
 
-const cadastrarPetService = async (data) => {
-    const response = await api.post('/pet/', {
+const cadastrarPetService = async (formData) => {
+    const response = await api.post('/pet/', formData, {
         headers: {
             Authorization: `Bearer ${Cookies.get("token")}`
-        }, data
-    })
-    return response
+        }
+    });
+    return response;
 }
 
 

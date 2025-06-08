@@ -1,64 +1,96 @@
 import React, { useState, useRef } from 'react';
+// 1. Importe seu serviço de API
+import { cadastrarPetService } from '../../services/petServices.js'; // Corrija o caminho se necessário
 import './RegisterPet.css';
+import Swal from 'sweetalert2';
 
-// Recebe a função para adicionar o pet e a função para fechar o modal
+
 export default function RegisterPetForm({ onAddPet, onClose }) {
-  const [nome, setNome] = useState('');
-  const [especie, setEspecie] = useState('Cachorro'); // Valor padrão
-  const [raca, setRaca] = useState('');
-  const [idade, setIdade] = useState('');
-  const [foto, setFoto] = useState(null); // Para o arquivo da foto
-  const [fotoPreview, setFotoPreview] = useState(null); // Para a URL de preview
+  const [name, setName] = useState('');
+  const [type, setType] = useState('Cachorro');
+  const [breed, setBreed] = useState('');
+  const [age, setAge] = useState('');
+  const [photo, setPhoto] = useState(null); // Para o arquivo da foto
+  const [photoPreview, setPhotoPreview] = useState(null);
+  
+  // Novo estado para controlar o envio do formulário
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Ref para acessar o input de arquivo escondido
   const fileInputRef = useRef(null);
 
-  const handleFotoClick = () => {
-    fileInputRef.current.click(); // Abre o seletor de arquivos
+  const handlePhotoClick = () => {
+    fileInputRef.current.click();
   };
 
-  const handleFotoChange = (event) => {
+  const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setFoto(file);
-      setFotoPreview(URL.createObjectURL(file)); // Cria uma URL temporária para preview
+      setPhoto(file);
+      setPhotoPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (event) => {
+  // 2. Modifique a função handleSubmit para ser assíncrona e chamar a API
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!nome || !idade || !foto) {
-      alert('Por favor, preencha todos os campos obrigatórios e adicione uma foto.');
+    if (!name || !age || !photo) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Por favor, preencha nome, idade e adicione uma foto.',
+        confirmButtonColor: '#60a5fa'
+      });
       return;
     }
 
-    const novoPet = {
-      id: Date.now(), // ID único baseado no tempo atual
-      nome,
-      especie,
-      raca: raca || 'Não informada',
-      idade,
-      foto: fotoPreview, // Usamos a URL de preview para a exibição
-    };
+    // Desabilita o botão para evitar múltiplos envios
+    setIsSubmitting(true);
 
-    onAddPet(novoPet); // Adiciona o novo pet na lista da página principal
-    onClose(); // Fecha o modal
+    // 3. Crie um FormData para enviar arquivos e dados
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('type', type);
+    formData.append('breed', breed);
+    formData.append('age', age);
+    formData.append('photo', photo); // 'photo' aqui é o objeto do arquivo
+
+    try {
+      // 4. Chame o serviço da API
+      const response = await cadastrarPetService(formData);
+
+      // 5. Se tiver sucesso, adicione o novo pet (retornado pela API) à lista e feche o modal
+      onAddPet(response.data);
+      onClose();
+
+    } catch (error) {
+      console.error("Erro ao cadastrar pet:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro no Cadastro',
+        text: 'Não foi possível cadastrar o pet. Tente novamente.',
+        confirmButtonColor: '#60a5fa'
+      });
+    } finally {
+      // Reabilita o botão no final, tanto em sucesso quanto em erro
+      setIsSubmitting(false);
+    }
   };
 
   return (
+    // Note que os nomes dos estados e handlers foram atualizados para corresponder à API
     <form onSubmit={handleSubmit} className="register-pet-form">
       <h2>Registrar Novo Pet</h2>
 
-      <div className="foto-uploader" onClick={handleFotoClick}>
+      <div className="foto-uploader" onClick={handlePhotoClick}>
         <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
-          onChange={handleFotoChange}
+          onChange={handlePhotoChange}
           style={{ display: 'none' }}
         />
-        {fotoPreview ? (
-          <img src={fotoPreview} alt="Preview do pet" className="foto-preview" />
+        {photoPreview ? (
+          <img src={photoPreview} alt="Preview do pet" className="foto-preview" />
         ) : (
           <div className="foto-placeholder">
             <span>+</span>
@@ -68,29 +100,32 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
       </div>
 
       <div className="form-group">
-        <label htmlFor="nome">Nome *</label>
-        <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+        <label htmlFor="name">Nome *</label>
+        <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
 
       <div className="form-group">
-        <label htmlFor="especie">Espécie *</label>
-        <select id="especie" value={especie} onChange={(e) => setEspecie(e.target.value)} required>
+        <label htmlFor="type">Espécie *</label>
+        <select id="type" value={type} onChange={(e) => setType(e.target.value)} required>
           <option value="Cachorro">Cachorro</option>
           <option value="Gato">Gato</option>
         </select>
       </div>
 
       <div className="form-group">
-        <label htmlFor="raca">Raça</label>
-        <input type="text" id="raca" value={raca} onChange={(e) => setRaca(e.target.value)} />
+        <label htmlFor="breed">Raça</label>
+        <input type="text" id="breed" value={breed} onChange={(e) => setBreed(e.target.value)} />
       </div>
 
       <div className="form-group">
-        <label htmlFor="idade">Idade *</label>
-        <input type="text" id="idade" value={idade} onChange={(e) => setIdade(e.target.value)} required />
+        <label htmlFor="age">Idade *</label>
+        <input type="text" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
       </div>
 
-      <button type="submit" className="submit-btn">Registrar Pet</button>
+      {/* 6. Adicione o estado 'disabled' ao botão */}
+      <button type="submit" className="submit-btn" disabled={isSubmitting}>
+        {isSubmitting ? 'Registrando...' : 'Registrar Pet'}
+      </button>
     </form>
   );
 }
