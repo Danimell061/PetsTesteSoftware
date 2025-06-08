@@ -30,27 +30,6 @@ const getUserLogged = async () => {
     return response
 }
 
-<<<<<<< HEAD
-const deleteUserService = async (userId, token) => {
-    const response = await api.delete(`/user/${userId}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-    return response;
-}
-
-const updateUserService = async (userId) => {
-    const response = await api.put(`/user/${userId}`, {
-        headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`
-        }
-    });
-    return response;
-}
-
-export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUserService, updateUserService };
-=======
 const updateUser = async (id, data)=>{
     const response = await api.put(`/user/${id}`, data, {
         headers: {
@@ -70,4 +49,3 @@ const deleteUser = async (id) => {
 
 
 export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUser, updateUser }
->>>>>>> integracao
