@@ -39,4 +39,13 @@ const deleteUserService = async (userId, token) => {
     return response;
 }
 
-export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUserService };
+const updateUserService = async (userId) => {
+    const response = await api.put(`/user/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }
+    });
+    return response;
+}
+
+export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUserService, updateUserService };

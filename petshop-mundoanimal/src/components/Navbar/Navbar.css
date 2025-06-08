@@ -93,3 +93,19 @@
   background-color: #f3f4f6;
   color: #111827;
 }
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e5e7eb; /* Cinza claro */
+  margin: 0.5rem 0; /* Espaçamento vertical */
+}
+
+/* Opcional: Estilo para destacar o botão de logout */
+.dropdown-item.logout {
+  color: #ef4444; /* Vermelho */
+}
+
+.dropdown-item.logout:hover {
+  background-color: #fef2f2; /* Fundo vermelho bem claro no hover */
+  color: #b91c1c; /* Vermelho mais escuro no hover */
+}

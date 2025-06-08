@@ -1,21 +1,20 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom'; // Importe useNavigate
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import Cookies from 'js-cookie';
 
 export default function Sidebar() {
-  const navigate = useNavigate(); // Inicialize o hook
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    Cookies.remove('token')
-    // Aqui você poderia adicionar lógicas de limpeza de sessão, etc.
-    navigate('/'); // Redireciona para a página de boas-vindas
+    Cookies.remove('token');
+    localStorage.removeItem('user'); // Limpa também o user do localStorage por segurança
+    navigate('/');
   };
 
   return (
-    // A tag <aside> agora tem a classe .sidebar-container
     <aside className="sidebar">
-      <div> {/* Este div agrupa a parte de cima */}
+      <div> {/* Agrupa a parte de cima */}
         <div className="sidebar-header">
           <h3>Painel</h3>
         </div>
@@ -29,10 +28,12 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* NOVO: Rodapé da sidebar com o botão de sair */}
       <div className="sidebar-footer">
         <button onClick={handleLogout} className="logout-btn">
           Sair
+        </button>
+        <button onClick={() => navigate('/cliente')} className="view-client-btn">
+          Visão Cliente
         </button>
       </div>
     </aside>

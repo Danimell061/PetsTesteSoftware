@@ -20,11 +20,8 @@
   max-width: 500px;
   position: relative;
   animation: slide-down 0.3s ease-out;
-  
-  /* ================== LINHAS ADICIONADAS ================== */
-  max-height: 90vh; /* Altura máxima de 90% da tela */
-  overflow-y: auto;   /* Adiciona scroll se o conteúdo for maior */
-  /* ========================================================= */
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-close-btn {

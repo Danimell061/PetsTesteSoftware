@@ -1,4 +1,3 @@
-/* Mude o seletor de .sidebar para .sidebar-container */
 .sidebar {
   width: 250px;
   background-color: #1f2937;
@@ -7,11 +6,9 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  /* NOVO: Esta propriedade empurra o footer para baixo */
   justify-content: space-between; 
 }
 
-/* ... as outras classes .sidebar-header, .sidebar-nav, .sidebar-link permanecem iguais ... */
 .sidebar-header {
   padding: 1.5rem;
   font-size: 1.5rem;
@@ -46,25 +43,44 @@
   font-weight: 500;
 }
 
-/* NOVO: Estilos para o rodapé e botão de sair */
+
+/* ================== ÁREA MODIFICADA ================== */
+
+/* Rodapé agora usa flexbox para alinhar os botões */
 .sidebar-footer {
   padding: 1rem;
   border-top: 1px solid #374151;
+  display: flex; /* Ativa o Flexbox */
+  justify-content: space-between; /* Coloca um item no início e outro no fim */
+  gap: 0.5rem; /* Espaço entre os botões */
 }
 
-.logout-btn {
-  width: 100%;
+/* Estilo base para os botões do rodapé */
+.sidebar-footer button {
+  flex: 1; /* Faz os botões dividirem o espaço igualmente */
   padding: 0.75rem;
-  background-color: #ef4444; /* Vermelho para indicar uma ação de "saída" ou "perigo" */
   color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem; /* Diminuí um pouco a fonte para caber melhor */
   font-weight: 500;
   transition: background-color 0.2s ease;
+  white-space: nowrap; /* Evita quebra de texto */
 }
 
+/* Botão de Sair (vermelho, à esquerda) */
+.logout-btn {
+  background-color: #ef4444;
+}
 .logout-btn:hover {
   background-color: #dc2626;
+}
+
+/* NOVO: Botão Visão Cliente (cinza escuro, à direita) */
+.view-client-btn {
+  background-color: #60a5fa; /* Cor neutra/secundária */
+}
+.view-client-btn:hover {
+  background-color: #3b82f6;
 }

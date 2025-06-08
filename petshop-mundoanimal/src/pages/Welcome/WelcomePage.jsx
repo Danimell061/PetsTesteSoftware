@@ -27,18 +27,10 @@ export default function WelcomePage() {
           <button
             className="btn-cliente"
             onClick={() => {
-              navigate('/login', { state: { tipoUsuario: 'cliente' } });
+              navigate('/login');
             }}
           >
-            Login Cliente
-          </button>
-          <button
-            className="btn-funcionario"
-            onClick={() => {
-              navigate('/login', { state: { tipoUsuario: 'funcionario' } });
-            }}
-          >
-            Login Funcionário
+            Login
           </button>
         </div>
 
