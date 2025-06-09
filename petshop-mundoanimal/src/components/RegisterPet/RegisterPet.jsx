@@ -66,7 +66,7 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="register-pet-form">
+    <form onSubmit={handleSubmit} className="edit-user-form">
       <h2>Registrar Novo Pet</h2>
 
       <div className="pet-image-display">
