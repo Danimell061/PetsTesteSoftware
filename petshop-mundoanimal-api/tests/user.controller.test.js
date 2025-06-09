@@ -1,17 +1,21 @@
-import { describe, it, expect, vi } from 'vitest'
-import { registerUser, findAllUsers } from '../src/controllers/user.controller.js'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { registerUser, findAllUsers, adminUpdateUser, deleteUser } from '../src/controllers/user.controller.js'
 import userService from '../src/services/user.service.js'
 
 // Mock simples do userService
 vi.mock('../src/services/user.service.js', () => ({
   default: {
     create: vi.fn(),
-    findAll: vi.fn()
+    findAll: vi.fn(),
+    updateRole: vi.fn(),
+    delete: vi.fn()
   }
 }))
 
 describe('User Controller - Testes Básicos', () => {
-  
+  beforeEach(() => {
+    vi.clearAllMocks() // Limpa todos os mocks antes de cada teste
+    })
   it('deve criar um usuário com sucesso', async () => {
     // Arrange
     const req = {
@@ -72,4 +76,64 @@ describe('User Controller - Testes Básicos', () => {
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.send).toHaveBeenCalledWith(mockUsers)
   })
+
+  it('deve rejeitar cargo inválido', async () => {
+    // Arrange
+    const req = {
+      body: { role: 'gerente' } // cargo que não existe
+    }
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      send: vi.fn()
+    }
+    
+    // Act
+    await adminUpdateUser(req, res)
+    
+    // Assert
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toHaveBeenCalledWith({ message: "Cargo não existente!" })
+  })
+
+  it('deve deletar usuário com sucesso', async () => {
+    // Arrange
+    const req = {
+      userId: 1,
+      decodedId: 1, // mesmo usuário
+      params: { id: 1 }
+    }
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      send: vi.fn()
+    }
+    userService.delete.mockResolvedValue({id: 1})
+    
+    // Act
+    await deleteUser(req, res)
+    
+    // Assert
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.send).toHaveBeenCalledWith({ message: "Usuario e seus pets deletados!" })
+  })
+
+  it('não deve deletar usuário com sucesso', async () => {
+    // Arrange
+    const req = {
+      userId: 1,
+      decodedId: 2, // usuário diferente
+      params: { id: 1 }
+    }
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      send: vi.fn()
+    }
+    userService.delete.mockResolvedValue({id: 1})
+    
+    // Act
+    await deleteUser(req, res)
+    
+    // Assert
+    expect(res.status).toHaveBeenCalledWith(500)
+  })
+  
 })
