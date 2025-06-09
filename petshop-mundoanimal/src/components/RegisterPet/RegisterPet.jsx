@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 import { cadastrarPetService } from '../../services/petServices.js'; // Ajuste o caminho se necessário
 import './RegisterPet.css';
 
-// 1. URLs das imagens (link do cachorro ATUALIZADO)
 const DOG_IMAGE_URL = "https://img.freepik.com/premium-vector/cartoon-cute-beagle-dog-with-speech-bubble_52569-2186.jpg?w=360";
 const CAT_IMAGE_URL = "https://img.freepik.com/premium-vector/cute-cartoon-cat-profile-avatar_1177872-8.jpg";
 

@@ -100,11 +100,6 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose }) {
         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
       </div>
 
-      <div className="form-group">
-        <label>Senha</label>
-        <p className="password-notice">Não é possível alterar a senha.</p>
-      </div>
-
       <div className="form-actions">
         <button type="submit" className="submit-btn" disabled={isSubmitting}>
           {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
