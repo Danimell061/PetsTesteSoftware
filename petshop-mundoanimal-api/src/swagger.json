@@ -59,7 +59,7 @@
     "/api/user": {
       "get": {
         "summary": "Busca todos usuarios",
-        "description": "Rota responsavel por buscar todos usuarios",
+        "description": "Rota responsavel por buscar todos usuarios (requer cargo funcionario ou superior)",
         "tags": ["Users"],
         "security": [{ "bearerAuth": [] }],
         "responses": {

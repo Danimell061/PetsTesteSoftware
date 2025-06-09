@@ -28,6 +28,9 @@ const userService = {
     update: (id, name, email, password) => {
         return User.findByIdAndUpdate(id, { name, email, password })
     },
+    updateRole: (id, role) => {
+        return User.findByIdAndUpdate(id, { role })
+    },
     delete: async (id) => {
         await Pet.deleteMany({ user: id })
         return User.findByIdAndDelete(id)
