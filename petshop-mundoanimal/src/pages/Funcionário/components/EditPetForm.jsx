@@ -1,115 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { getAllPets, deletePet, getUserLogged } from '../../../../services/petServices.js'; // Ajuste os serviços
-import PetCard from '../../../../components/Petcard/Petcard';
-import Modal from '../../../../components/Modal/Modal';
-import EditPetForm from '../components/EditPetForm';
-import './ListaPetsFuncionario.css';
+import { updatePet } from '../../../services/petServices'; // Ajuste o caminho se necessário
+import './EditForm.css'; // Usando o mesmo arquivo de CSS do EditUserForm
 
-export default function ListaPetsFuncionario() {
-  const [allPets, setAllPets] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  // --- ESTADOS PARA O MODAL DE EDIÇÃO ---
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingPet, setEditingPet] = useState(null);
+export default function EditPetForm({ petToEdit, onUpdateSuccess, onClose }) {
+  // 1. ADICIONADO 'type' de volta ao estado do formulário
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'Cachorro', // Valor padrão
+    breed: '',
+    age: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Preenche o formulário com os dados do pet selecionado
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [petsResponse, userResponse] = await Promise.all([
-          getAllPets(),
-          getUserLogged()
-        ]);
-        setAllPets(petsResponse.data);
-        setLoggedInUser(userResponse.data);
-      } catch (err) {
-        setError("Não foi possível carregar os dados.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (petToEdit) {
+      setFormData({
+        name: petToEdit.name || '',
+        type: petToEdit.type || 'Cachorro', // 2. ADICIONADO 'type' aqui também
+        breed: petToEdit.breed || '',
+        age: petToEdit.age || '',
+      });
+    }
+  }, [petToEdit]);
 
-  const canPerformAction = () => {
-    if (!loggedInUser) return false;
-    return loggedInUser.role === 'admin' || loggedInUser.role === 'funcionario';
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleDeletePet = async (petId, petName) => {
-    // ... lógica de exclusão que já funciona
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await updatePet(petToEdit._id, formData);
+      await Swal.fire({
+        title: 'Sucesso!',
+        text: 'Pet atualizado com sucesso.',
+        icon: 'success',
+        confirmButtonColor: '#3b82f6',
+      });
+      onUpdateSuccess(response.data);
+      onClose();
+    } catch (error) {
+      console.error('Erro ao atualizar pet:', error);
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Não foi possível atualizar o pet.',
+        icon: 'error',
+        confirmButtonColor: '#3b82f6',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  // --- FUNÇÕES PARA CONTROLAR O MODAL ---
-  const handleOpenEditModal = (pet) => {
-    setEditingPet(pet); // Guarda qual pet estamos editando
-    setIsEditModalOpen(true); // Abre o modal
-  };
-  
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false);
-    setEditingPet(null);
-  };
-  
-  const handleUpdateSuccess = (updatedPet) => {
-    // Atualiza a lista na tela sem precisar recarregar
-    setAllPets(prevPets => prevPets.map(p => p._id === updatedPet._id ? updatedPet : p));
-  };
-
-  const filteredPets = allPets.filter(pet =>
-    pet?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pet?.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  if (loading) { return <div className="view-container"><h2>Carregando todos os pets...</h2></div>; }
-  if (error) { return <div className="view-container error-message"><h2>{error}</h2></div>; }
 
   return (
-    <>
-      <div className="view-container">
-        <div className="view-header">
-          <h1>Todos os Pets Cadastrados</h1>
-          <input
-            type="text"
-            placeholder="Pesquisar por nome do pet ou do dono..."
-            className="search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+    // 3. CORREÇÃO PRINCIPAL: Usando a classe 'edit-user-form' para que o CSS seja aplicado
+    <form onSubmit={handleSubmit} className="edit-user-form">
+      <h2>Editando Pet:</h2>
+      <p className="editing-user-name">{petToEdit.name}</p>
 
-        <div className="pet-list-funcionario">
-          {filteredPets.length > 0 ? (
-            filteredPets.map(pet => (
-              <PetCard 
-                key={pet._id}
-                pet={pet} 
-                ownerName={pet.user?.name} 
-                // Passando as funções para o PetCard
-                onDelete={canPerformAction() ? handleDeletePet : null}
-                onEdit={canPerformAction() ? handleOpenEditModal : null}
-              />
-            ))
-          ) : (
-            <p className="no-results-message">Nenhum pet encontrado.</p>
-          )}
-        </div>
+      <div className="form-group">
+        <label htmlFor="name">Nome</label>
+        <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required />
       </div>
 
-      {/* RENDERIZAÇÃO CONDICIONAL DO MODAL DE EDIÇÃO */}
-      {isEditModalOpen && (
-        <Modal onClose={handleCloseEditModal}>
-            <EditPetForm
-                petToEdit={editingPet}
-                onUpdateSuccess={handleUpdateSuccess}
-                onClose={handleCloseEditModal}
-            />
-        </Modal>
-      )}
-    </>
+      {/* 4. ADICIONADO de volta o campo 'Espécie' */}
+      <div className="form-group">
+        <label htmlFor="type">Espécie</label>
+        <select id="type" name="type" value={formData.type} onChange={handleChange} required>
+          <option value="Cachorro">Cachorro</option>
+          <option value="Gato">Gato</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="breed">Raça</label>
+        <input id="breed" name="breed" type="text" value={formData.breed} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="age">Idade</label>
+        <input id="age" name="age" type="text" value={formData.age} onChange={handleChange} required />
+      </div>
+
+      <button type="submit" className="submit-btn" disabled={isSubmitting}>
+        {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+      </button>
+    </form>
   );
 }

@@ -48,4 +48,13 @@ const deleteUser = async (id) => {
     return response
 }
 
-export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUser, updateUser }
+const updateRoleUser = async (id, role) => {
+    const response = await api.patch(`/user/admin/${id}`, { role }, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }
+    })
+    return response
+}
+
+export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUser, updateUser, updateRoleUser }
