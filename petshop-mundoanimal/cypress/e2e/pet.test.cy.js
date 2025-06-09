@@ -44,6 +44,9 @@ describe('Fluxo completo de pets', () => {
     cy.get('.swal2-confirm').click();
 
     cy.get('.register-btn').click();
+
+    cy.wait(500);
+
     cy.get('#name').type(updatedPet.name);
     cy.get('#type').select(updatedPet.type);
     cy.get('#breed').type(updatedPet.breed);
@@ -65,10 +68,10 @@ describe('Fluxo completo de pets', () => {
     cy.get('.filter-group > :nth-child(2) > input').click();
     cy.get('.filter-group > :nth-child(2) > input').click();
 
-    cy.get('.btn-alterar').click();
+    cy.get(':nth-child(3) > .cliente-actions > .btn-alterar').click();
     
     cy.get('#name')
-    .invoke('val')           // pega o valor atual do input
+    .invoke('val')          
     .then((currentValue) => {
       if (currentValue === 'Nathan') {
       cy.get('#name').clear().type('Allan');
