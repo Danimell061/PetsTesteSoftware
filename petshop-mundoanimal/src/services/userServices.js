@@ -38,6 +38,7 @@ const updateUser = async (id, data)=>{
     })
     return response
 }
+
 const deleteUser = async (id) => {
     const response = await api.delete(`/user/${id}`, {
         headers: {
@@ -46,6 +47,5 @@ const deleteUser = async (id) => {
     })
     return response
 }
-
 
 export { getAllUsers, loginService, cadastrarService, getUserLogged, deleteUser, updateUser }

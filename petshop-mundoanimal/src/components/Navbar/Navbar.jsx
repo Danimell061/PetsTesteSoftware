@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { getUserLogged } from '../../services/userServices'; // Ajuste o caminho se necessário
+import { getUserLogged } from '../../services/userServices.js';
 import Modal from '../Modal/Modal';
-import EditProfileForm from '../../pages/Clientes/components/EditProfile';
+import EditProfileForm from '../../pages/Clientes/components/EditProfile.jsx'; // Caminho que você mostrou na imagem
 import './Navbar.css';
 import logo from '../../assets/logo.png';
 
@@ -11,23 +11,21 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-  // Estado para controlar o modal de edição de perfil
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const response = await getUserLogged();
-        setUser(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error);
-        handleLogout();
+      if (Cookies.get("token")) {
+        try {
+          const response = await getUserLogged();
+          setUser(response.data);
+        } catch (error) {
+          console.error("Erro ao buscar dados do usuário:", error);
+          handleLogout();
+        }
       }
     };
-    if (Cookies.get("token")) {
-      fetchUserData();
-    }
+    fetchUserData();
   }, []);
 
   const handleLogout = () => {
@@ -37,7 +35,7 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
     navigate('/');
   };
 
-  // Função para atualizar os dados na Navbar após a edição no modal
+  // Função simplificada: apenas atualiza o estado local com os dados novos vindos do formulário
   const handleProfileUpdate = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -66,7 +64,6 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
           >
             Olá, {user ? user.name : 'Visitante'} &#x25BC;
           </button>
-
           {isDropdownOpen && (
             <div className="dropdown-menu">
               <button
@@ -78,13 +75,11 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
               >
                 Editar Perfil
               </button>
-              
               {user && (user.role === 'admin' || user.role === 'funcionario') && (
                 <button onClick={() => navigate('/funcionario')} className="dropdown-item">
                   Painel Funcionário
                 </button>
               )}
-
               <div className="dropdown-divider"></div>
               <button onClick={handleLogout} className="dropdown-item logout">
                 Logout
@@ -94,7 +89,7 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
         </div>
       </nav>
 
-      {/* Renderização do Modal de Edição */}
+      {/* A chamada para o Modal e o Formulário */}
       {isEditModalOpen && user && (
         <Modal onClose={() => setIsEditModalOpen(false)}>
           <EditProfileForm

@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { getAllPets } from '../../../../services/petServices'; // Ajuste o caminho para o seu arquivo de serviços
+import Swal from 'sweetalert2'; // Importe o Swal aqui
+import { getAllPets, deletePet } from '../../../../services/petServices.js'; // Importe o deletePetService
 import PetCard from '../../../../components/Petcard/Petcard';
-import './ListaPetsFuncionario.css'; // Crie este arquivo se necessário
+import './ListaPetsFuncionario.css';
 
 export default function ListaPetsFuncionario() {
-  // Estados para os dados, carregamento e erros
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // useEffect para buscar os dados da API quando o componente carregar
   useEffect(() => {
     const fetchAllPetsData = async () => {
       try {
         const response = await getAllPets();
-        setAllPets(response.data); // Armazena a lista de pets no estado
+        setAllPets(response.data);
         setError(null);
       } catch (err) {
         console.error("Erro ao buscar todos os pets:", err);
@@ -24,24 +23,54 @@ export default function ListaPetsFuncionario() {
         setLoading(false);
       }
     };
-
     fetchAllPetsData();
-  }, []); // O array vazio [] garante que rode apenas uma vez
+  }, []);
 
-  // Filtra os pets pelo nome do pet OU pelo nome do dono
+  // NOVO: Função para lidar com a exclusão de um pet
+  const handleDeletePet = async (petId, petName) => {
+    const result = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${petName}?`,
+      text: "Esta ação não pode ser revertida!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3b82f6",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deletePet(petId);
+
+        // Remove o pet da lista na tela para uma atualização instantânea
+        setAllPets(prevPets => prevPets.filter(p => p._id !== petId));
+
+        Swal.fire({
+          title: "Excluído!",
+          text: `O pet ${petName} foi excluído com sucesso.`,
+          icon: "success",
+          confirmButtonColor: "#3b82f6"
+        });
+      } catch (error) {
+        console.error("Erro ao excluir pet:", error);
+        Swal.fire({
+          title: "Erro!",
+          text: "Não foi possível excluir o pet.",
+          icon: "error",
+          confirmButtonColor: "#3b82f6"
+        });
+      }
+    }
+  };
+
   const filteredPets = allPets.filter(pet =>
-    // CORREÇÃO: Usando os nomes corretos da API (pet.name e pet.user.name)
     pet?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pet?.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return <div className="view-container"><h2>Carregando todos os pets...</h2></div>;
-  }
-
-  if (error) {
-    return <div className="view-container error-message"><h2>{error}</h2></div>;
-  }
+  if (loading) { /* ... */ }
+  if (error) { /* ... */ }
 
   return (
     <div className="view-container">
@@ -60,10 +89,10 @@ export default function ListaPetsFuncionario() {
         {filteredPets.length > 0 ? (
           filteredPets.map(pet => (
             <PetCard 
-              key={pet._id} // CORREÇÃO: Usando _id do MongoDB
+              key={pet._id}
               pet={pet} 
-              // CORREÇÃO: Passando o nome do dono a partir de pet.user.name
               ownerName={pet.user?.name} 
+              onDelete={handleDeletePet} // Passando a função de exclusão para o PetCard
             />
           ))
         ) : (

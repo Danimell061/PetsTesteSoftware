@@ -28,15 +28,6 @@ const cadastrarPetService = async (formData) => {
     return response;
 }
 
-const deletePet = async (id) => {
-    const response = await api.delete(`/pet/${id}`, {
-        headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`
-        }
-    })
-    return response
-}
-
 const updatePet = async (id, data) => {
     const response = await api.put(`/pet/${id}`, data, {
         headers: {
@@ -46,5 +37,13 @@ const updatePet = async (id, data) => {
     return response
 }
 
+const deletePet = async (id) => {
+    const response = await api.delete(`/pet/${id}`, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+        }
+    })
+    return response
+}
 
 export { getAllPets, getUserPets, cadastrarPetService, deletePet, updatePet }

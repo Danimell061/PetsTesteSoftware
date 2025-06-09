@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
-// 1. Importe seu serviço de API
-import { cadastrarPetService } from '../../services/petServices.js'; // Corrija o caminho se necessário
-import './RegisterPet.css';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { cadastrarPetService } from '../../services/petServices.js'; // Ajuste o caminho se necessário
+import './RegisterPet.css';
+
+// 1. URLs das imagens (link do cachorro ATUALIZADO)
+const DOG_IMAGE_URL = "https://img.freepik.com/premium-vector/cartoon-cute-beagle-dog-with-speech-bubble_52569-2186.jpg?w=360";
+const CAT_IMAGE_URL = "https://img.freepik.com/premium-vector/cute-cartoon-cat-profile-avatar_1177872-8.jpg";
 
 
 export default function RegisterPetForm({ onAddPet, onClose }) {
@@ -10,58 +13,45 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
   const [type, setType] = useState('Cachorro');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
-  const [photo, setPhoto] = useState(null); // Para o arquivo da foto
-  const [photoPreview, setPhotoPreview] = useState(null);
-  
-  // Novo estado para controlar o envio do formulário
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fileInputRef = useRef(null);
+  // Lógica de upload de foto foi removida
 
-  const handlePhotoClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handlePhotoChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setPhoto(file);
-      setPhotoPreview(URL.createObjectURL(file));
-    }
-  };
-
-  // 2. Modifique a função handleSubmit para ser assíncrona e chamar a API
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!name || !age) {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Por favor, preencha nome, idade e adicione uma foto.',
+        text: 'Por favor, preencha os campos de nome e idade.',
         confirmButtonColor: '#60a5fa'
       });
       return;
     }
 
-    // Desabilita o botão para evitar múltiplos envios
     setIsSubmitting(true);
 
-    // 3. Crie um FormData para enviar arquivos e dados
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('type', type);
-    formData.append('breed', breed);
-    formData.append('age', age);
-    formData.append('photo', photo); // 'photo' aqui é o objeto do arquivo
+    const novoPet = {
+      name,
+      type,
+      breed: breed || 'Não informada',
+      age,
+      // 2. Usamos as constantes com as URLs aqui
+      photo: type === 'Cachorro' ? DOG_IMAGE_URL : CAT_IMAGE_URL,
+    };
 
     try {
-      // 4. Chame o serviço da API
-      const pet = Object.fromEntries(formData.entries())
-      const response = await cadastrarPetService(pet);
+      const response = await cadastrarPetService(novoPet);
 
-      // 5. Se tiver sucesso, adicione o novo pet (retornado pela API) à lista e feche o modal
       onAddPet(response.data);
       onClose();
+      
+      Swal.fire({
+          title: "Sucesso!",
+          text: `${name} foi cadastrado!`,
+          icon: "success",
+          confirmButtonColor: "#3b82f6"
+      });
 
     } catch (error) {
       console.error("Erro ao cadastrar pet:", error);
@@ -72,32 +62,21 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
         confirmButtonColor: '#60a5fa'
       });
     } finally {
-      // Reabilita o botão no final, tanto em sucesso quanto em erro
       setIsSubmitting(false);
     }
   };
 
   return (
-    // Note que os nomes dos estados e handlers foram atualizados para corresponder à API
     <form onSubmit={handleSubmit} className="register-pet-form">
       <h2>Registrar Novo Pet</h2>
 
-      <div className="foto-uploader" onClick={handlePhotoClick}>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handlePhotoChange}
-          style={{ display: 'none' }}
+      <div className="pet-image-display">
+        <img
+          // 3. E usamos as constantes com as URLs aqui também
+          src={type === 'Cachorro' ? DOG_IMAGE_URL : CAT_IMAGE_URL}
+          alt={`Imagem de um ${type}`}
+          className="pet-preview-image"
         />
-        {photoPreview ? (
-          <img src={photoPreview} alt="Preview do pet" className="foto-preview" />
-        ) : (
-          <div className="foto-placeholder">
-            <span>+</span>
-            <p>Adicionar Foto</p>
-          </div>
-        )}
       </div>
 
       <div className="form-group">
@@ -123,7 +102,6 @@ export default function RegisterPetForm({ onAddPet, onClose }) {
         <input type="text" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
       </div>
 
-      {/* 6. Adicione o estado 'disabled' ao botão */}
       <button type="submit" className="submit-btn" disabled={isSubmitting}>
         {isSubmitting ? 'Registrando...' : 'Registrar Pet'}
       </button>

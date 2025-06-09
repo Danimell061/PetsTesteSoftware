@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getUserPets } from '../../../services/petServices.js'; // Ajuste o caminho se necessário
+import Swal from 'sweetalert2'; // 1. Importe o Swal
+import { getUserPets, deletePet } from '../../../services/petServices.js'; // 1. Importe o deletePetService
 
 // Imports dos componentes...
 import Navbar from '../../../components/Navbar/Navbar';
@@ -31,11 +32,46 @@ export default function PetsPage() {
         setLoading(false);
       }
     };
-
     fetchUserPets();
   }, []);
 
-  // CORREÇÃO 1: Usar 'pet.name' em vez de 'pet.nome'
+  // 2. Crie a função para lidar com a exclusão
+  const handleDeletePet = async (petId, petName) => {
+    const result = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${petName}?`,
+      text: "Esta ação não pode ser revertida!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3b82f6",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deletePet(petId);
+        // Remove o pet da lista na tela
+        setPets(prevPets => prevPets.filter(p => p._id !== petId));
+        Swal.fire({
+          title: "Excluído!",
+          text: `O pet ${petName} foi excluído com sucesso.`,
+          icon: "success",
+          confirmButtonColor: "#3b82f6"
+        });
+      } catch (error) {
+        console.error("Erro ao excluir pet:", error);
+        Swal.fire({
+          title: "Erro!",
+          text: "Não foi possível excluir o pet.",
+          icon: "error",
+          confirmButtonColor: "#3b82f6"
+        });
+      }
+    }
+  };
+
+
   const filteredPets = pets.filter(pet =>
     pet?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -44,13 +80,8 @@ export default function PetsPage() {
     setPets(prevPets => [novoPet, ...prevPets]);
   };
 
-  if (loading) {
-    return <div>Carregando seus pets...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (loading) { /* ... */ }
+  if (error) { /* ... */ }
   
   return (
     <div className="page-container">
@@ -76,8 +107,12 @@ export default function PetsPage() {
             </div>
           ) : (
             filteredPets.map(pet => (
-              // CORREÇÃO 2: Usar 'pet._id' como key, que é o id do MongoDB
-              <PetCard key={pet._id} pet={pet} />
+              // 3. Passe a função handleDeletePet como a prop 'onDelete'
+              <PetCard 
+                key={pet._id} 
+                pet={pet}
+                onDelete={handleDeletePet} 
+              />
             ))
           )}
         </div>

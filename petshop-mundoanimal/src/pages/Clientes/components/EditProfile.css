@@ -80,7 +80,7 @@
 .delete-account-btn {
   background: none;
   border: none;
-  color: #ef4444; /* Vermelho para indicar perigo */
+  color: #ef4444;
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.9rem;
@@ -88,5 +88,5 @@
 }
 
 .delete-account-btn:hover {
-  color: #b91c1c; /* Vermelho mais escuro no hover */
+  color: #b91c1c;
 }

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { updateUser } from '../../../services/userServices'; // Ajuste o caminho para seus serviços
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { updateUser, deleteUser } from '../../../services/userServices.js';
 import './EditProfile.css';
 
-// O componente continua recebendo as 4 props, incluindo 'onDelete'
-export default function EditProfileForm({ currentUser, onUpdate, onClose, onDelete }) {
+export default function EditProfileForm({ currentUser, onUpdate, onClose }) {
   
   const [formData, setFormData] = useState({
     name: currentUser.name || '',
@@ -12,13 +13,11 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
@@ -26,17 +25,21 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
     setIsSubmitting(true);
 
     try {
-      const response = await updateUser(formData);
-      onUpdate(response.data);
+      // 1. Chama a API para salvar as alterações
+      await updateUser(currentUser._id, formData);
       
-      Swal.fire({
+      // 2. Mostra o pop-up de sucesso
+      await Swal.fire({
         title: "Sucesso!",
-        text: "Seu perfil foi atualizado.",
+        text: "Seu perfil foi atualizado com sucesso.",
         icon: "success",
-        confirmButtonColor: "#60a5fa"
+        showConfirmButton: true,        // GARANTE que o botão apareça
+        confirmButtonText: 'Continuar', // DEFINE o texto do botão
+        confirmButtonColor: "#3b82f6"
       });
       
-      onClose();
+      // 3. FORÇA O RECARREGAMENTO DA PÁGINA
+      window.location.reload();
 
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
@@ -44,31 +47,42 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
         title: "Erro!",
         text: "Não foi possível atualizar o perfil.",
         icon: "error",
-        confirmButtonColor: "#60a5fa"
+        confirmButtonColor: "#3b82f6"
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // NOVO: Função para mostrar o pop-up de confirmação de exclusão
-  const handleDeleteClick = async () => {
+  const handleDeleteProfile = async () => {
+    // ... A lógica de exclusão permanece a mesma e já funciona
     const result = await Swal.fire({
-      title: "Você tem certeza?",
-      text: "Sua conta será excluída permanentemente. Esta ação não pode ser revertida.",
+      title: `Tem certeza, ${currentUser.name}?`,
+      text: "Sua conta será excluída permanentemente!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#f87171",
-      cancelButtonColor: "#60a5fa",
-      confirmButtonText: "Sim, excluir minha conta!",
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3b82f6",
+      confirmButtonText: "Sim, excluir",
       cancelButtonText: "Cancelar"
     });
 
-    // Se o usuário confirmar no pop-up...
     if (result.isConfirmed) {
-      // ...nós chamamos a função 'onDelete' que veio da Navbar.
-      // A Navbar cuidará da chamada da API e do logout.
-      onDelete();
+      try {
+        await deleteUser(currentUser._id);
+        await Swal.fire({
+          title: "Conta Excluída!",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        Cookies.remove('token');
+        localStorage.removeItem('user');
+        navigate('/');
+      } catch (error) {
+        console.error("Erro ao excluir perfil:", error);
+        Swal.fire("Erro", "Não foi possível excluir sua conta.", "error");
+      }
     }
   };
 
@@ -78,31 +92,17 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
       
       <div className="form-group">
         <label htmlFor="name">Nome</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name"
-          value={formData.name} 
-          onChange={handleChange} 
-          required 
-        />
+        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
       </div>
 
       <div className="form-group">
         <label htmlFor="email">E-mail</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          value={formData.email} 
-          onChange={handleChange} 
-          required 
-        />
+        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
       </div>
 
       <div className="form-group">
         <label>Senha</label>
-        <p className="password-notice">A senha não pode ser alterada.</p>
+        <p className="password-notice">Não é possível alterar a senha.</p>
       </div>
 
       <div className="form-actions">
@@ -116,8 +116,7 @@ export default function EditProfileForm({ currentUser, onUpdate, onClose, onDele
         <button 
           type="button"
           className="delete-account-btn" 
-          // O onClick agora chama nossa nova função de confirmação
-          onClick={handleDeleteClick} 
+          onClick={handleDeleteProfile}
         >
           Excluir Minha Conta
         </button>
