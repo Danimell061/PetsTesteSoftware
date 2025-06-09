@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+// Importa todos os serviços necessários para esta página
 import { getAllUsers, deleteUser, getUserLogged } from '../../../../services/userServices.js';
+// Importa os componentes de UI
 import Modal from '../../../../components/Modal/Modal';
-import EditUserForm from '../../components/EditUserForm.jsx';
+import EditUserForm from '../../components/EditUserForm.jsx'; // Lembre-se de verificar este caminho
+// Importa o CSS
 import './ListaClientes.css';
 
 export default function ListaClientes() {
-  // --- LÓGICA DE ESTADO ---
+  // --- ESTADO DO COMPONENTE ---
   const [clientes, setClientes] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null); // Para saber quem está logado
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,8 +27,9 @@ export default function ListaClientes() {
     const fetchData = async () => {
       try {
         const token = Cookies.get("token");
-        if (!token) throw new Error("Acesso não autorizado.");
+        if (!token) throw new Error("Acesso não autorizado. Por favor, faça login.");
         
+        // Busca todos os usuários e o usuário logado em paralelo para mais eficiência
         const [usersResponse, loggedUserResponse] = await Promise.all([
           getAllUsers(token),
           getUserLogged()
@@ -33,6 +37,7 @@ export default function ListaClientes() {
         
         setClientes(usersResponse.data);
         setLoggedInUser(loggedUserResponse.data);
+
       } catch (err) {
         console.error("Erro ao buscar dados:", err);
         setError("Não foi possível carregar os dados. Por favor, faça login novamente.");
@@ -41,17 +46,25 @@ export default function ListaClientes() {
       }
     };
     fetchData();
-  }, []);
+  }, []); // O array vazio [] garante que rode apenas uma vez
 
   // Decide se o usuário logado pode agir sobre o usuário alvo
   const canPerformAction = (targetUser) => {
-    if (!loggedInUser || loggedInUser._id === targetUser._id) return false;
-    if (loggedInUser.role === 'admin') return true;
-    if (loggedInUser.role === 'funcionario' && targetUser.role === 'cliente') return true;
+    if (!loggedInUser || loggedInUser._id === targetUser._id) {
+      return false; // Ninguém pode agir sobre si mesmo nesta tela
+    }
+    const myRole = loggedInUser.role?.toLowerCase();
+    const targetRole = targetUser.role?.toLowerCase();
+
+    if (myRole === 'admin') return true; // Admin pode tudo (exceto em si mesmo)
+    if (myRole === 'funcionario' && targetRole === 'cliente') return true; // Funcionário só pode em cliente
+
     return false;
   };
 
   // --- HANDLERS DE AÇÃO (MODAL, DELETE, FILTROS) ---
+
+  // Lida com a exclusão de um cliente
   const handleDelete = async (clienteId, clienteName) => {
     const result = await Swal.fire({
       title: `Tem certeza que deseja excluir ${clienteName}?`,
@@ -86,24 +99,25 @@ export default function ListaClientes() {
     }
   };
 
+  // Lida com a mudança nos checkboxes de filtro
   const handleRoleChange = (event) => {
     const { name, checked } = event.target;
-    setSelectedRoles(prevRoles => ({
-      ...prevRoles,
-      [name]: checked,
-    }));
+    setSelectedRoles(prevRoles => ({ ...prevRoles, [name]: checked }));
   };
 
+  // Abre o modal de edição
   const handleOpenEditModal = (user) => {
     setEditingUser(user);
     setIsEditModalOpen(true);
   };
 
+  // Fecha o modal de edição
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setEditingUser(null);
   };
   
+  // Atualiza a lista na tela após a edição ser salva com sucesso
   const handleUpdateSuccess = (updatedUser) => {
     setClientes(prevClientes => 
       prevClientes.map(cliente => 
@@ -114,9 +128,12 @@ export default function ListaClientes() {
 
   // --- LÓGICA DE FILTRO ---
   const filteredClientes = clientes.filter(cliente => {
+    const searchTermLower = searchTerm.toLowerCase();
+    const roleLower = cliente?.role?.toLowerCase();
+
     const matchesSearchTerm =
-      cliente?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente?.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      cliente?.name?.toLowerCase().includes(searchTermLower) ||
+      cliente?.email?.toLowerCase().includes(searchTermLower);
 
     const activeRoles = Object.keys(selectedRoles).filter(role => selectedRoles[role]);
     
@@ -124,7 +141,7 @@ export default function ListaClientes() {
       return matchesSearchTerm;
     }
 
-    const matchesRole = activeRoles.includes(cliente?.role?.toLowerCase());
+    const matchesRole = activeRoles.includes(roleLower);
     return matchesSearchTerm && matchesRole;
   });
 
@@ -215,6 +232,7 @@ export default function ListaClientes() {
         <Modal onClose={handleCloseEditModal}>
           <EditUserForm
             userToEdit={editingUser}
+            loggedInUser={loggedInUser}
             onUpdateSuccess={handleUpdateSuccess}
             onClose={handleCloseEditModal}
           />
