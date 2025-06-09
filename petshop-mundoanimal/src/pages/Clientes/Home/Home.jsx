@@ -9,6 +9,8 @@ import Modal from '../../../components/Modal/Modal';
 import RegisterPetForm from '../../../components/RegisterPet/RegisterPet';
 import './HomePage.css';
 import '../../../../styles/Global.css';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export default function PetsPage() {
   const [pets, setPets] = useState([]);
@@ -16,10 +18,15 @@ export default function PetsPage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate()
   
   useEffect(() => {
     const fetchUserPets = async () => {
       try {
+        if(!Cookies.get('token')){
+          navigate('/')
+          return
+        }
         setLoading(true);
         const response = await getUserPets();
         setPets(response.data); 

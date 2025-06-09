@@ -106,4 +106,28 @@ const deleteUser = async (req, res) => {
     }
 }
 
-export { registerUser, findAllUsers, findUser, updateUser, findUserByToken, deleteUser }
+const adminUpdateUser = async (req, res) => {
+    try{
+        const { role } = req.body
+        if(role !== 'funcionario' && role !== 'admin' && role !== 'cliente'){
+            return res.status(400).send({ message:"Cargo não existente!"} )
+        }
+        const { userId, decodedId } = req
+        const { id } = req.params
+
+        if(userId != decodedId){
+            const user = await userService.findById(decodedId)
+            if(user.role !== 'admin'){
+                return res.status(401).send("Unauthorized")
+            }
+        }
+
+        const result = await userService.updateRole(id, role)
+
+        return res.status(200).send({ message: "Cargo alterado!" })
+    }catch(err){
+        res.status(500).send({ message: err.message })
+    }
+}
+
+export { registerUser, findAllUsers, findUser, updateUser, findUserByToken, deleteUser, adminUpdateUser }
